@@ -1,0 +1,24 @@
+<resources>
+	<!-- Global -->
+	<string name="app_name">Illusion des contrastes</string>
+    <string name="prom">Psycho ~ Xème année</string>
+    <!-- /global -->
+
+	<!-- Home -->
+	<string name="home_settings_button">Paramètres</string>
+    <string name="home_start_button">Commencer</string>
+    <!-- /home -->
+
+    <!-- Presentation -->
+    <string name="presentation">"Dans cette activité, vous devrez dire si un carré est plus ou moins foncé qu'un carré de référence.Vous aurez pour cela X essais, où vous ne verrez les carrés que pendant X secondes.Appuyez sur le bouton pour commencer l'entrainement."</string>
+    <!-- /prensentation -->
+
+    <!-- Settings -->
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_tries">"Nombre d'essais par manche:"</string>
+    <string name="settings_sets">Nombre de manches:</string>
+    <string name="experiment_less">Moins foncé</string>
+    <string name="experiment_equals">Ce sont les mêmes</string>
+    <string name="experiment_more">Plus foncé</string>
+    <!-- /settings -->
+</resources>
