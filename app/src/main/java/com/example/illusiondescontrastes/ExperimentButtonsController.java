@@ -36,7 +36,7 @@ public class ExperimentButtonsController implements View.OnClickListener {
 		}
 	}
 
-//	controller
+//	Constructor
 	ExperimentButtonsController( ExperimentController experimentController ) {
 		this.experimentController = experimentController;
 	}

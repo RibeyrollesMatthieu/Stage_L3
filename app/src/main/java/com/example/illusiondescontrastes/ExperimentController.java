@@ -1,27 +1,28 @@
 package com.example.illusiondescontrastes;
 
 import android.content.Context;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.view.LayoutInflater;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 class ExperimentController {
 	private final int SCREEN_WIDTH ;
 	private final int SCREEN_HEIGHT ;
+	private int alpha_range;
 
 	private int maxExperiments;
 	private int experiments_count;
+	private int currentTry;
 
 	private boolean inExperiment;
 	private boolean canClick;
+	private boolean darkBackground;
 
 	private ArrayList<Integer> answers;
+	private ArrayList< Integer > alphas;
 
 	private Context context;
 	private Experiment experiment;
@@ -41,17 +42,12 @@ class ExperimentController {
 
 	/* add answer to the list*/
 	void addAnswer( Answer answer ) {
-		this.answers.add( answer.getValue() );
+//		this.answers.add( answer.getValue() );
 	}
 
 	/* write a file containing the answers */
-	private void writeAnswersFile() throws IOException {
-		BufferedWriter out = new BufferedWriter( new FileWriter( String.format( "%s.txt", this.OUTPUT_FILE_NAME ) ) );
-
-		for ( int answer : this.answers) {
-			out.write( answer );
-			out.newLine();
-		}
+	private void writeAnswersFile() {
+		new FileWriter( this.context ).createExternalStoragePrivatePicture();
 	}
 
 	/* call whenever new rectangles are shown <=> for every new try */
@@ -73,7 +69,7 @@ class ExperimentController {
 
 	/* call whenever we need to add new rectangles */
 	private void addRectangles( ) {
-		this.rectanglesView = new Rectangles( this.context, this.SCREEN_WIDTH, this.SCREEN_HEIGHT );
+		this.rectanglesView = new Rectangles( this.context, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.experiments_count - 1 ) );
 		this.experiment.addView( rectanglesView );
 
 		try { this.startNewRectanglesLoop(); }
@@ -83,6 +79,7 @@ class ExperimentController {
 
 	void newExperiment() {
 		this.initExpCount();
+		this.alphas = RectangleColorGenerator.generateColors( this.maxExperiments, this.alpha_range );
 		this.experiment.removeAllViews();
 		this.addRectangles();
 		this.experiment.addButtons();
@@ -92,10 +89,8 @@ class ExperimentController {
 		this.experiment.removeAllViews();
 
 		if (inExperiment) {
+			this.writeAnswersFile();
 			LayoutInflater.from( this.context ).inflate( R.layout.activity_main, this.experiment, true );
-			try {
-				this.writeAnswersFile();
-			} catch ( IOException e ) { e.printStackTrace( ); }
 		} else {
 			this.experiment.addView( new TrainingToExperimentView( this.context, this ) );
 		}
@@ -105,15 +100,18 @@ class ExperimentController {
 
 	void newTry() {
 		this.canClick = false;
-		experiment.removeView( rectanglesView );
+		experiment.removeAllViews();
 
 		new Handler( Looper.getMainLooper() ).postDelayed( new Runnable( ) {
 			@Override
 			public void run( ) {
 				addRectangles();
+				experiment.addButtons();
 				canClick = true;
 			}
 		}, 1 * 1_000 );
+
+		this.currentTry ++;
 	}
 
 	private void initTimers() {
@@ -131,13 +129,16 @@ class ExperimentController {
 		this.maxExperiments = 0;
 		this.inExperiment = inExperiment;
 		this.canClick = true;
-		this.answers = new ArrayList< Integer >();
+		this.alpha_range = 30;
 
 		this.initTimers();
 
 		this.context = context;
 		this.experiment = experiment;
 
+		try {
+			this.alpha_range = Integer.parseInt( Util.getProperty( "opacity_range", this.context ) );
+		} catch ( IOException e ) { e.printStackTrace( ); }
 		this.SCREEN_WIDTH = this.experiment.getResources( ).getDisplayMetrics( ).widthPixels;
 		this.SCREEN_HEIGHT = this.experiment.getResources().getDisplayMetrics().heightPixels;
 	}

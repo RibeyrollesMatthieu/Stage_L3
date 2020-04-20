@@ -9,49 +9,59 @@ import android.view.View;
 import java.util.Random;
 
 public class Rectangles extends View {
-	private final int SCREE_WIDTH;
+	private final int SCREEN_WIDTH;
+	private final int SCREEN_HEIGHT;
 	private final int SIZE;
 
 	private Paint paint;
 
-	private int generateRandomColor() {
+	private int rightSquareAlpha;
+
+	private float generateRandomColor() {
 		Random rnd = new Random(  );
 
-		return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+		return rnd.nextFloat();
 	}
 
 	private void drawLeftSquare( Canvas canvas ) {
-		final int EXT_LEFT = ( this.SCREE_WIDTH / 2 ) - ( 2 * this.SIZE);
+		final int EXT_LEFT = ( this.SCREEN_WIDTH / 2 ) - ( 2 * this.SIZE);
 		final int EXT_TOP = this.SIZE;
 
-		paint.setColor( generateRandomColor() );
-		canvas.drawRect( EXT_LEFT, EXT_TOP, EXT_LEFT + this.SIZE, EXT_TOP + this.SIZE, paint );
+		paint.setColor( Color.WHITE );
+		canvas.drawPaint( paint );
 
-		paint.setColor( generateRandomColor() );
-		canvas.drawRect( EXT_LEFT + 20, EXT_TOP + 20, EXT_LEFT + this.SIZE - 20, EXT_TOP + this.SIZE - 20, paint );
+		/* outer rectangle */
+		paint.setColor( Color.rgb( 150, 150, 150) );
+		canvas.drawRect( 0, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT, paint );
+
+		/* inner rectangle */
+		paint.setColor( Color.argb( 255 / 2, 100, 100, 100 ) );
+		canvas.drawRect( EXT_LEFT, EXT_TOP, EXT_LEFT + this.SIZE, EXT_TOP + this.SIZE, paint );
 	}
 
-	private void drawRightSquare( Canvas canvas ) {
-		final int LEFT = ( this.SCREE_WIDTH / 2 ) + this.SIZE;
+	private void drawRightSquare( Canvas canvas, int alpha ) {
+		final int LEFT = ( this.SCREEN_WIDTH / 2 ) + this.SIZE;
 		final int TOP = this.SIZE;
 
-		paint.setColor( generateRandomColor() );
-		canvas.drawRect( LEFT, TOP, LEFT + this.SIZE - 20, TOP + this.SIZE - 20, paint );
+		paint.setColor( Color.argb( alpha, 100, 100, 100 ) );
+		canvas.drawRect( LEFT, TOP, LEFT + this.SIZE, TOP + this.SIZE, paint );
 	}
 
 	@Override
 	public void onDraw( Canvas canvas ) {
 		drawLeftSquare( canvas );
-		drawRightSquare( canvas );
+		drawRightSquare( canvas, this.rightSquareAlpha );
 	}
 
-	public Rectangles( Context ctx, int screen_width, int screen_height) {
+	public Rectangles( Context ctx, int screen_width, int screen_height, int rightSquareAlpha ) {
 		super( ctx );
 
 		this.SIZE = screen_height / 3;
-		this.SCREE_WIDTH = screen_width;
+		this.SCREEN_WIDTH = screen_width;
+		this.SCREEN_HEIGHT = screen_height;
 
 		this.paint = new Paint();
 
+		this.rightSquareAlpha = rightSquareAlpha;
 	}
 }
