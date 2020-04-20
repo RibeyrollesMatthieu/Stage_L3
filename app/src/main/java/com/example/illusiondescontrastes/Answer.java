@@ -1,13 +1,13 @@
 package com.example.illusiondescontrastes;
 
 enum Answer {
-	LIGHTER ( -1 ),
-	EQUALS ( 0 ),
-	DARKER ( +1 );
+	LIGHTER ( "PLus clair" ),
+	EQUALS ( "Ce sont les même" ),
+	DARKER ( "Plus foncé");
 
-	private final int value;
+	private final String value;
 
-	int getValue() { return this.value; }
+	String getValue() { return this.value; }
 
-	Answer( int value ) { this.value = value; }
+	Answer( String value ) { this.value = value; }
 }

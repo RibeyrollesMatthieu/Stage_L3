@@ -3,10 +3,10 @@ package com.example.illusiondescontrastes;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.LayoutInflater;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 class ExperimentController {
 	private final int SCREEN_WIDTH ;
@@ -21,7 +21,10 @@ class ExperimentController {
 	private boolean canClick;
 	private boolean darkBackground;
 
-	private ArrayList<Integer> answers;
+	private ArrayList<ArrayList<Answer>> answersMap;
+	private ArrayList<ArrayList<Answer>> rightAnswers;
+
+	private ArrayList< Answer > answers;
 	private ArrayList< Integer > alphas;
 
 	private Context context;
@@ -42,7 +45,7 @@ class ExperimentController {
 
 	/* add answer to the list*/
 	void addAnswer( Answer answer ) {
-//		this.answers.add( answer.getValue() );
+		this.answers.add( answer );
 	}
 
 	/* write a file containing the answers */
@@ -80,6 +83,7 @@ class ExperimentController {
 	void newExperiment() {
 		this.initExpCount();
 		this.alphas = RectangleColorGenerator.generateColors( this.maxExperiments, this.alpha_range );
+		this.answers = new ArrayList<>(  );
 		this.experiment.removeAllViews();
 		this.addRectangles();
 		this.experiment.addButtons();
@@ -87,10 +91,12 @@ class ExperimentController {
 
 	void endOfExperiment( ) {
 		this.experiment.removeAllViews();
+		this.answersMap.add( this.answers );
+		this.rightAnswers.add(RectangleColorGenerator.getRightAnswers());
 
 		if (inExperiment) {
 			this.writeAnswersFile();
-			LayoutInflater.from( this.context ).inflate( R.layout.activity_main, this.experiment, true );
+			this.experiment.addView( new DisplayAnswers( this.context, this.answersMap, this.rightAnswers ) );
 		} else {
 			this.experiment.addView( new TrainingToExperimentView( this.context, this ) );
 		}
@@ -135,10 +141,13 @@ class ExperimentController {
 
 		this.context = context;
 		this.experiment = experiment;
+		this.answersMap = new ArrayList<>(  );
+		this.rightAnswers = new ArrayList<>(  );
 
 		try {
 			this.alpha_range = Integer.parseInt( Util.getProperty( "opacity_range", this.context ) );
 		} catch ( IOException e ) { e.printStackTrace( ); }
+
 		this.SCREEN_WIDTH = this.experiment.getResources( ).getDisplayMetrics( ).widthPixels;
 		this.SCREEN_HEIGHT = this.experiment.getResources().getDisplayMetrics().heightPixels;
 	}

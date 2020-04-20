@@ -1,10 +1,28 @@
 package com.example.illusiondescontrastes;
 
 import android.content.Context;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
-public class DisplayAnswers extends RelativeLayout {
-	public DisplayAnswers( Context context ) {
+import java.util.ArrayList;
+
+public class DisplayAnswers extends LinearLayout {
+	public DisplayAnswers( Context context, ArrayList<ArrayList<Answer>> answers, ArrayList<ArrayList<Answer>> rightAnswers ) {
 		super( context );
+
+		this.setOrientation( VERTICAL );
+
+		for (ArrayList<Answer> list : answers) {
+			TextView textView = new TextView( context );
+			textView.setText( String.format( "Experiment number %d", answers.indexOf( list ) ) );
+			this.addView( textView );
+
+			for (int j = 0; j < list.size(); j++) {
+				TextView textView2 = new TextView( context );
+
+				textView2.setText( String.format( "Réponse sélectionnnée : %s          |          La réponse était %s", list.get(j).getValue(), rightAnswers.get(answers.indexOf(list)).get(j).getValue() ) );
+				this.addView( textView2 );
+			}
+		}
 	}
 }

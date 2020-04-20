@@ -24,7 +24,7 @@ public class Rectangles extends View {
 	}
 
 	private void drawLeftSquare( Canvas canvas ) {
-		final int EXT_LEFT = ( this.SCREEN_WIDTH / 2 ) - ( 2 * this.SIZE);
+		final int EXT_LEFT = ( this.SCREEN_WIDTH / 5 * 3 ) - ( 2 * this.SIZE);
 		final int EXT_TOP = this.SIZE;
 
 		paint.setColor( Color.WHITE );
@@ -32,7 +32,7 @@ public class Rectangles extends View {
 
 		/* outer rectangle */
 		paint.setColor( Color.rgb( 150, 150, 150) );
-		canvas.drawRect( 0, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT, paint );
+		canvas.drawRect( 0, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT - 100, paint );
 
 		/* inner rectangle */
 		paint.setColor( Color.argb( 255 / 2, 100, 100, 100 ) );
@@ -40,7 +40,7 @@ public class Rectangles extends View {
 	}
 
 	private void drawRightSquare( Canvas canvas, int alpha ) {
-		final int LEFT = ( this.SCREEN_WIDTH / 2 ) + this.SIZE;
+		final int LEFT = ( this.SCREEN_WIDTH / 5 * 2 ) + this.SIZE;
 		final int TOP = this.SIZE;
 
 		paint.setColor( Color.argb( alpha, 100, 100, 100 ) );
