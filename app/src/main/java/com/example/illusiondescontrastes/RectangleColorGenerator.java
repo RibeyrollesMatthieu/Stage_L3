@@ -8,10 +8,13 @@ class RectangleColorGenerator {
 	private static ArrayList< Integer > alphas;
 	private static ArrayList<Couple> couples = new ArrayList<>(  );
 
-	static ArrayList< Answer > getRightAnswers( ) {
-		return rightAnswers;
-	}
+	/*  return the list containing all the alpha values for current experiment */
+	static ArrayList< Integer > getAlphas( ) { return alphas; }
 
+	/* return the list containing all the correct answers for current experiment */
+	static ArrayList< Answer > getRightAnswers( ) { return rightAnswers; }
+
+	/* shuffle the couples list and add content to alpha and answers lists */
 	private static void shuffle() {
 		Collections.shuffle( couples );
 
@@ -21,25 +24,23 @@ class RectangleColorGenerator {
 		}
 	}
 
-	static ArrayList< Integer > generateColors( int tries, int range ) {
+	/* generate colors and answers for current experiment */
+	static void generateColors( int tries, int range ) {
+		/* initialize the lists we gonna use in there */
 		alphas = new ArrayList<>();
 		rightAnswers = new ArrayList<>();
+		couples = new ArrayList<>(  );
 
-		final int BASE_ALPHA = 255 / 2;
-		int scale = (range * 255 / 100) / tries * 2;
+		final int BASE_ALPHA = 255 / 2;	// starting alpha. Mid alpha (0.5)
+		int scale = (range * 255 / 100) / tries * 2;	// scale between each alpha value
 		int currentScale;
 
 		for (int i = 0; i < tries; i++) {
 			currentScale = i * scale;
-			Answer currentAnswer;
 
-			if (i == 0) {
-				currentAnswer = Answer.EQUALS;
-			} else if (i <= tries / 2) {
-				currentAnswer = Answer.LIGHTER;
-			} else {
-				currentAnswer = Answer.DARKER;
-			}
+			/* create alpha and answer to make as much less than more, and one equals */
+			Answer currentAnswer = (i <= tries / 2) ? (i == 0) ? Answer.EQUALS : Answer.LIGHTER
+													:  Answer.DARKER;
 
 			int currentAlpha = (i <= tries / 2) ? BASE_ALPHA - currentScale : BASE_ALPHA + currentScale;
 
@@ -47,10 +48,10 @@ class RectangleColorGenerator {
 		}
 
 		shuffle();
-		return alphas ;
 	}
 }
 
+/* class couple. used to bind alpha and answer */
 class Couple {
 	private int alpha;
 	private Answer answer;

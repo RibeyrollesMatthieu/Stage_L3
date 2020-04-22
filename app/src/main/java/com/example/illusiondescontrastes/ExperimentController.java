@@ -6,22 +6,21 @@ import android.os.Looper;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 class ExperimentController {
 	private final int SCREEN_WIDTH ;
 	private final int SCREEN_HEIGHT ;
-	private int alpha_range;
 
+	private int alpha_range;
 	private int maxExperiments;
-	private int experiments_count;
-	private int currentTry;
+	private int try_count;
+	private int number_of_experiments;
+	private int current_experiment;
 
 	private boolean inExperiment;
 	private boolean canClick;
-	private boolean darkBackground;
 
-	private ArrayList<ArrayList<Answer>> answersMap;
+	private ArrayList<ArrayList<Answer>> answersList;
 	private ArrayList<ArrayList<Answer>> rightAnswers;
 
 	private ArrayList< Answer > answers;
@@ -36,8 +35,8 @@ class ExperimentController {
 
 //	Getters and setters
 	int getMaxExperiments( ) { return maxExperiments; }
-	int getExperimentsCount() { return experiments_count; }
-	void increaseExperimentsCount() { this.experiments_count ++; }
+	int getExperimentsCount() { return try_count; }
+	void increaseExperimentsCount() { this.try_count++; }
 	boolean canClick() { return this.canClick; }
 //	void setInExperiment() { this.inExperiment = true; }
 
@@ -67,12 +66,13 @@ class ExperimentController {
 		} catch ( IOException e ) {
 			e.printStackTrace();
 		}
-		this.experiments_count = 1;
+		this.try_count = 1;
+		this.current_experiment = 0;
 	}
 
 	/* call whenever we need to add new rectangles */
 	private void addRectangles( ) {
-		this.rectanglesView = new Rectangles( this.context, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.experiments_count - 1 ) );
+		this.rectanglesView = new Rectangles( this.context, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.try_count - 1 ) );
 		this.experiment.addView( rectanglesView );
 
 		try { this.startNewRectanglesLoop(); }
@@ -80,23 +80,27 @@ class ExperimentController {
 
 	}
 
+	/* call for starting a new experiment */
 	void newExperiment() {
 		this.initExpCount();
-		this.alphas = RectangleColorGenerator.generateColors( this.maxExperiments, this.alpha_range );
+		RectangleColorGenerator.generateColors( this.maxExperiments, this.alpha_range );
+		this.alphas = RectangleColorGenerator.getAlphas();
 		this.answers = new ArrayList<>(  );
 		this.experiment.removeAllViews();
 		this.addRectangles();
 		this.experiment.addButtons();
 	}
 
+	/* call when an experiment ends */
 	void endOfExperiment( ) {
 		this.experiment.removeAllViews();
-		this.answersMap.add( this.answers );
+		this.answersList.add( this.answers );
 		this.rightAnswers.add(RectangleColorGenerator.getRightAnswers());
 
 		if (inExperiment) {
+
 			this.writeAnswersFile();
-			this.experiment.addView( new DisplayAnswers( this.context, this.answersMap, this.rightAnswers ) );
+			this.experiment.addView( new DisplayAnswers( this.context, this.answersList, this.rightAnswers ) );
 		} else {
 			this.experiment.addView( new TrainingToExperimentView( this.context, this ) );
 		}
@@ -116,8 +120,6 @@ class ExperimentController {
 				canClick = true;
 			}
 		}, 1 * 1_000 );
-
-		this.currentTry ++;
 	}
 
 	private void initTimers() {
@@ -132,6 +134,9 @@ class ExperimentController {
 
 //	constructor
 	ExperimentController ( Context context, final Experiment experiment, boolean inExperiment)  {
+		try {
+			this.number_of_experiments = Integer.parseInt( Util.getProperty( "number_of_experiments", this.context ) );
+		} catch ( IOException e ) { e.printStackTrace( ); }
 		this.maxExperiments = 0;
 		this.inExperiment = inExperiment;
 		this.canClick = true;
@@ -141,7 +146,7 @@ class ExperimentController {
 
 		this.context = context;
 		this.experiment = experiment;
-		this.answersMap = new ArrayList<>(  );
+		this.answersList = new ArrayList<>(  );
 		this.rightAnswers = new ArrayList<>(  );
 
 		try {

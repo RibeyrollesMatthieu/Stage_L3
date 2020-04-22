@@ -13,14 +13,16 @@ public class DisplayAnswers extends LinearLayout {
 		this.setOrientation( VERTICAL );
 
 		for (ArrayList<Answer> list : answers) {
+			int index = answers.indexOf( list );
+
 			TextView textView = new TextView( context );
-			textView.setText( String.format( "Experiment number %d", answers.indexOf( list ) ) );
+			textView.setText( String.format( "Experiment number %d", index ) );
 			this.addView( textView );
 
 			for (int j = 0; j < list.size(); j++) {
 				TextView textView2 = new TextView( context );
 
-				textView2.setText( String.format( "Réponse sélectionnnée : %s          |          La réponse était %s", list.get(j).getValue(), rightAnswers.get(answers.indexOf(list)).get(j).getValue() ) );
+				textView2.setText( String.format( "Réponse sélectionnnée : %s          |          La réponse était %s", list.get(j).getValue(), rightAnswers.get(index).get(j).getValue() ) );
 				this.addView( textView2 );
 			}
 		}
