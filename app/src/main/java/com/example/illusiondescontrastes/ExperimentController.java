@@ -15,6 +15,7 @@ class ExperimentController {
 	private int try_count;
 	private int number_of_experiments;
 	private int current_experiment;
+	private int number_of_black_bg;
 
 	private boolean inExperiment;
 	private boolean canClick;
@@ -63,7 +64,12 @@ class ExperimentController {
 
 	/* call whenever we need to add new rectangles */
 	private void addRectangles( ) {
-		this.rectanglesView = new Rectangles( this.context, false, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.try_count - 1 ) );
+		this.rectanglesView = new Rectangles(
+				this.context,
+				this.number_of_black_bg > 0,
+				this.SCREEN_WIDTH,
+				this.SCREEN_HEIGHT,
+				this.alphas.get( this.try_count - 1 ) );
 		this.experiment.addView( rectanglesView );
 
 		try { this.startNewRectanglesLoop(); }
@@ -96,6 +102,7 @@ class ExperimentController {
 		if (inExperiment) {
 			if (this.current_experiment <= this.number_of_experiments) {
 				this.displayTimer();
+				this.number_of_black_bg--;
 			} else {
 				this.experiment.addView( new DisplayAnswers( this.context, this.answersList, this.rightAnswers ) );
 				inExperiment = false;
@@ -148,5 +155,7 @@ class ExperimentController {
 		this.SCREEN_WIDTH = this.experiment.getResources( ).getDisplayMetrics( ).widthPixels;
 		this.SCREEN_HEIGHT = this.experiment.getResources().getDisplayMetrics().heightPixels;
 		this.current_experiment = 0;
+
+		this.number_of_black_bg = number_of_experiments / 2;
 	}
 }
