@@ -19,7 +19,7 @@ class TrainingToExperimentView extends RelativeLayout implements View.OnClickLis
 
 	@Override
 	public void onClick( View v ) {
-		this.experimentController.newExperiment();	/* start a new experiment */
+		this.experimentController.displayTimer();	/* start a new experiment */
 	}
 
 //	controller
@@ -31,9 +31,7 @@ class TrainingToExperimentView extends RelativeLayout implements View.OnClickLis
 		this.experimentController = experimentController;
 
 		/* loading text from the properties file */
-		try {
-			(( TextView ) findViewById( R.id.start_experiment_text )).setText(  Util.getProperty( "message_between_training_and_experiment", this.getContext() ) );
-		} catch ( IOException e ) { e.printStackTrace(); }
+		(( TextView ) findViewById( R.id.start_experiment_text )).setText(  LocalStorage.getValue( "message_between_training_and_experiment") );
 
 		/* linking button to the class on click method */
 		findViewById( R.id.start_experiment_start_button ).setOnClickListener( this );

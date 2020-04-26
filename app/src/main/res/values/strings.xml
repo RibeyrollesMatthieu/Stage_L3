@@ -20,5 +20,6 @@
     <string name="experiment_less">Moins foncé</string>
     <string name="experiment_equals">Ce sont les mêmes</string>
     <string name="experiment_more">Plus foncé</string>
+    <string name="settings_save_button">Sauvegarder</string>
     <!-- /settings -->
 </resources>

@@ -6,22 +6,19 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.View;
 
-import java.util.Random;
-
 public class Rectangles extends View {
 	private final int SCREEN_WIDTH;
 	private final int SCREEN_HEIGHT;
 	private final int SIZE;
 
+	private final int DARK_BG_COLOR = Color.rgb( 50, 50, 50 );
+	private final int LIGHT_BG_COLOR = Color.rgb( 200, 200, 200 );
+
 	private Paint paint;
 
 	private int rightSquareAlpha;
 
-	private float generateRandomColor() {
-		Random rnd = new Random(  );
-
-		return rnd.nextFloat();
-	}
+	private boolean darkBg;
 
 	private void drawLeftSquare( Canvas canvas ) {
 		final int EXT_LEFT = ( this.SCREEN_WIDTH / 5 * 3 ) - ( 2 * this.SIZE);
@@ -31,8 +28,8 @@ public class Rectangles extends View {
 		canvas.drawPaint( paint );
 
 		/* outer rectangle */
-		paint.setColor( Color.rgb( 150, 150, 150) );
-		canvas.drawRect( 0, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT - 100, paint );
+		paint.setColor( (this.darkBg) ? DARK_BG_COLOR : LIGHT_BG_COLOR );
+		canvas.drawRect( 0, 0, this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT, paint );
 
 		/* inner rectangle */
 		paint.setColor( Color.argb( 255 / 2, 100, 100, 100 ) );
@@ -42,6 +39,10 @@ public class Rectangles extends View {
 	private void drawRightSquare( Canvas canvas, int alpha ) {
 		final int LEFT = ( this.SCREEN_WIDTH / 5 * 2 ) + this.SIZE;
 		final int TOP = this.SIZE;
+
+		/* outer rectangle */
+		paint.setColor( Color.WHITE );
+		canvas.drawRect( LEFT, TOP, this.SCREEN_WIDTH - this.SCREEN_WIDTH / 2, this.SCREEN_HEIGHT, paint );
 
 		paint.setColor( Color.argb( alpha, 100, 100, 100 ) );
 		canvas.drawRect( LEFT, TOP, LEFT + this.SIZE, TOP + this.SIZE, paint );
@@ -53,12 +54,13 @@ public class Rectangles extends View {
 		drawRightSquare( canvas, this.rightSquareAlpha );
 	}
 
-	public Rectangles( Context ctx, int screen_width, int screen_height, int rightSquareAlpha ) {
+	public Rectangles( Context ctx, boolean darkBg, int screen_width, int screen_height, int rightSquareAlpha ) {
 		super( ctx );
 
 		this.SIZE = screen_height / 3;
 		this.SCREEN_WIDTH = screen_width;
 		this.SCREEN_HEIGHT = screen_height;
+		this.darkBg = darkBg;
 
 		this.paint = new Paint();
 

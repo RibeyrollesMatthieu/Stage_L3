@@ -26,8 +26,7 @@ public class PresentationActivity extends Activity implements View.OnClickListen
         start.setOnClickListener( this );
 
         TextView presentation = findViewById( R.id.presentation_text );
-        try { presentation.setText( Util.getProperty( "experiment_presentation", this ) ); }
-        catch ( IOException e ) { e.printStackTrace(); };
+        presentation.setText( LocalStorage.getValue( "experiment_presentation" ) );
     }
 
     @Override

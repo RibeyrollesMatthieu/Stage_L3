@@ -11,7 +11,6 @@ class ExperimentController {
 	private final int SCREEN_WIDTH ;
 	private final int SCREEN_HEIGHT ;
 
-	private int alpha_range;
 	private int maxExperiments;
 	private int try_count;
 	private int number_of_experiments;
@@ -47,32 +46,24 @@ class ExperimentController {
 		this.answers.add( answer );
 	}
 
-	/* write a file containing the answers */
-	private void writeAnswersFile() {
-		new FileWriter( this.context ).createExternalStoragePrivatePicture();
-	}
-
 	/* call whenever new rectangles are shown <=> for every new try */
 	private void startNewRectanglesLoop( ) throws IOException {
 		this.handler.removeCallbacks( this.removeRectanglesRunnable );
-		this.handler.postDelayed( this.removeRectanglesRunnable, Integer.parseInt( Util.getProperty( "experiment_duration_per_try", this.context ) ) * 1_000 );
+		this.handler.postDelayed( this.removeRectanglesRunnable, Integer.parseInt( LocalStorage.getValue( "time_before_vanish" ) ) * 1_000 );
 	}
 
 	/* init the max experiments count allowed */
 	private void initExpCount() {
-		try {
-			if (! this.inExperiment) this.maxExperiments = Integer.parseInt( Util.getProperty("training_tries", context) );
-			else this.maxExperiments = Integer.parseInt( Util.getProperty( "experiment_tries", context ));
-		} catch ( IOException e ) {
-			e.printStackTrace();
-		}
+		if (! this.inExperiment) this.maxExperiments = Integer.parseInt( LocalStorage.getValue( "training_number_of_tries" ) );
+		else this.maxExperiments = Integer.parseInt( LocalStorage.getValue( "experiment_number_of_tries" ));
 		this.try_count = 1;
-		this.current_experiment = 0;
+		current_experiment++;
+		this.number_of_experiments = Integer.parseInt( LocalStorage.getValue( "number_of_experiments" ) );
 	}
 
 	/* call whenever we need to add new rectangles */
 	private void addRectangles( ) {
-		this.rectanglesView = new Rectangles( this.context, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.try_count - 1 ) );
+		this.rectanglesView = new Rectangles( this.context, false, this.SCREEN_WIDTH, this.SCREEN_HEIGHT, this.alphas.get( this.try_count - 1 ) );
 		this.experiment.addView( rectanglesView );
 
 		try { this.startNewRectanglesLoop(); }
@@ -80,10 +71,15 @@ class ExperimentController {
 
 	}
 
+	void displayTimer() {
+		experiment.removeAllViews();
+		experiment.addView( new Timer( this.context, this ) );
+	}
+
 	/* call for starting a new experiment */
 	void newExperiment() {
 		this.initExpCount();
-		RectangleColorGenerator.generateColors( this.maxExperiments, this.alpha_range );
+		RectangleColorGenerator.generateColors( this.maxExperiments, Integer.parseInt( LocalStorage.getValue( "range_for_alphas" ) ) );
 		this.alphas = RectangleColorGenerator.getAlphas();
 		this.answers = new ArrayList<>(  );
 		this.experiment.removeAllViews();
@@ -98,14 +94,16 @@ class ExperimentController {
 		this.rightAnswers.add(RectangleColorGenerator.getRightAnswers());
 
 		if (inExperiment) {
-
-			this.writeAnswersFile();
-			this.experiment.addView( new DisplayAnswers( this.context, this.answersList, this.rightAnswers ) );
+			if (this.current_experiment <= this.number_of_experiments) {
+				this.displayTimer();
+			} else {
+				this.experiment.addView( new DisplayAnswers( this.context, this.answersList, this.rightAnswers ) );
+				inExperiment = false;
+			}
 		} else {
 			this.experiment.addView( new TrainingToExperimentView( this.context, this ) );
+			inExperiment = true;
 		}
-
-		inExperiment = ! inExperiment;
 	}
 
 	void newTry() {
@@ -134,13 +132,11 @@ class ExperimentController {
 
 //	constructor
 	ExperimentController ( Context context, final Experiment experiment, boolean inExperiment)  {
-		try {
-			this.number_of_experiments = Integer.parseInt( Util.getProperty( "number_of_experiments", this.context ) );
-		} catch ( IOException e ) { e.printStackTrace( ); }
+
+		this.number_of_experiments = Integer.parseInt( LocalStorage.getValue( "number_of_experiments" ) );
 		this.maxExperiments = 0;
 		this.inExperiment = inExperiment;
 		this.canClick = true;
-		this.alpha_range = 30;
 
 		this.initTimers();
 
@@ -149,11 +145,8 @@ class ExperimentController {
 		this.answersList = new ArrayList<>(  );
 		this.rightAnswers = new ArrayList<>(  );
 
-		try {
-			this.alpha_range = Integer.parseInt( Util.getProperty( "opacity_range", this.context ) );
-		} catch ( IOException e ) { e.printStackTrace( ); }
-
 		this.SCREEN_WIDTH = this.experiment.getResources( ).getDisplayMetrics( ).widthPixels;
 		this.SCREEN_HEIGHT = this.experiment.getResources().getDisplayMetrics().heightPixels;
+		this.current_experiment = 0;
 	}
 }

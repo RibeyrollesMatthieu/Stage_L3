@@ -1,40 +1,164 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
     android:keepScreenOn="true">
 
-    <TextView
-        android:id="@+id/settings_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/settings_title"
-        android:textSize="@dimen/title_text_size"
-        android:padding="@dimen/settings_title_padding"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        android:layout_centerHorizontal="true"
-        />
+        <TextView
+            android:id="@+id/settings_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_title"
+            android:textSize="@dimen/title_text_size"
+            android:padding="@dimen/settings_title_padding"
 
-    <TextView
-        android:id="@+id/settings_tries"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_tries"
-        android:textSize="@dimen/settings_text_size"
-        android:paddingLeft="@dimen/elements_padding"
+            android:layout_centerHorizontal="true" />
 
-        android:layout_below="@id/settings_title"/>
+        <!-- Lines for training tries -->
+        <RelativeLayout
+            android:id="@+id/settings_training_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_below="@id/settings_title"
+            android:paddingBottom="@dimen/large_texts_margin">
 
-    <TextView
-        android:id="@+id/settings_sets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/settings_sets"
-        android:textSize="@dimen/settings_text_size"
-        android:paddingLeft="@dimen/elements_padding"
-        android:paddingTop="@dimen/elements_padding"
+            <TextView
+                android:id="@+id/settings_tries_for_training_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_text_size"
+                android:paddingStart="@dimen/elements_padding"
 
-        android:layout_below="@id/settings_tries"/>
+                tools:ignore="RtlSymmetry" />
 
-</RelativeLayout>
+            <EditText
+                android:id="@+id/settings_training_tries_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingLeft="@dimen/large_texts_margin"
+
+                android:layout_alignBottom="@+id/settings_tries_for_training_text"
+                android:layout_toEndOf="@+id/settings_tries_for_training_text" />
+
+        </RelativeLayout>
+        <!-- .\ Lines for training tries -->
+
+        <!-- Lines for experiment tries -->
+        <RelativeLayout
+            android:id="@+id/settings_experiment_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_training_part"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/large_texts_margin">
+
+            <TextView
+                android:id="@+id/settings_tries_for_experiment_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_text_size"
+                android:paddingStart="@dimen/elements_padding"
+
+                tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/settings_experiment_tries_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingLeft="@dimen/large_texts_margin"
+
+                android:layout_alignBottom="@+id/settings_tries_for_experiment_text"
+                android:layout_toEndOf="@+id/settings_tries_for_experiment_text" />
+
+        </RelativeLayout>
+        <!-- .\ Lines for experiment tries -->
+
+        <!-- Lines for time before vanish rectangles -->
+        <RelativeLayout
+            android:id="@+id/settings_time_before_vanish_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_training_part"
+            android:layout_centerInParent="true"
+            android:paddingBottom="@dimen/large_texts_margin">
+
+            <TextView
+                android:id="@+id/settings_time_before_vanish_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_text_size"
+                android:paddingStart="@dimen/elements_padding"
+
+                tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/settings_time_before_vanish_part_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingLeft="@dimen/large_texts_margin"
+
+                android:layout_alignBottom="@+id/settings_time_before_vanish_text"
+                android:layout_toEndOf="@+id/settings_time_before_vanish_text" />
+
+        </RelativeLayout>
+        <!-- .\ Lines for time before vanish rectangles -->
+
+        <!-- Lines for alphas -->
+        <RelativeLayout
+            android:id="@+id/settings_alphas_part"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_time_before_vanish_part"
+            android:layout_centerInParent="true">
+
+            <TextView
+                android:id="@+id/settings_alphas_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/settings_text_size"
+                android:paddingStart="@dimen/elements_padding"
+
+                tools:ignore="RtlSymmetry" />
+
+            <EditText
+                android:id="@+id/settings_alphas_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="number"
+                android:paddingLeft="@dimen/large_texts_margin"
+
+                android:layout_alignBottom="@+id/settings_alphas_text"
+                android:layout_toEndOf="@+id/settings_alphas_text" />
+
+        </RelativeLayout>
+        <!-- .\ Lines for alphas -->
+
+        <Button
+            android:id="@+id/settings_save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_save_button"
+
+            android:layout_alignParentBottom="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="50dp"/>
+
+    </LinearLayout>
+
+</ScrollView>
