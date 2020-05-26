@@ -1,7 +1,5 @@
 package com.example.illusiondescontrastes;
 
-import android.util.Log;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -33,25 +31,25 @@ class RectangleColorGenerator {
 		rightAnswers = new ArrayList<>();
 		couples = new ArrayList<>(  );
 
-		final int BASE_ALPHA = 255 / 2;	// starting alpha. Mid alpha (0.5)
-		int scale = (range * 255 / 100) / tries * 2;	// scale between each alpha value
+		if (range > 127) range = 127;
+		if (range < 0) range = 0;
 
-		int currentScale;
+		final int BASE_ALPHA = 255 / 2;	// starting alpha. Mid alpha (0.5)
+		int scale = (tries == 1) ? 0 : (range / (tries/ 2));	// avoid division by 0
 
 		for (int i = 0; i < tries; i++) {
-			currentScale = i * scale;
+			int currentScale;
 
-			/* ça vient sans doute de là*/
+			if (i <= tries / 2) {
+				currentScale = i * scale;
+			} else {
+				currentScale = (tries - i) * scale;
+			}
+
 			int currentAlpha = (i <= tries / 2) ? BASE_ALPHA - currentScale : BASE_ALPHA + currentScale;
-
-			Log.d( "teub de black", " caca    " + currentAlpha );
 
 			Answer currentAnswer = (currentAlpha < 127)	? Answer.LIGHTER
 														: (currentAlpha == 127) ? Answer.EQUALS : Answer.DARKER;
-
-//			/* create alpha and answer to make as much less than more, and one equals */
-//			Answer currentAnswer = (i <= tries / 2) ? (i == 0) ? Answer.EQUALS : Answer.LIGHTER
-//													:  Answer.DARKER;
 
 
 			couples.add( new Couple( currentAlpha, currentAnswer ) );

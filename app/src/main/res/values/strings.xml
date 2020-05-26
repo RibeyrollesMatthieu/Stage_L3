@@ -21,5 +21,6 @@
     <string name="experiment_equals">Ce sont les mêmes</string>
     <string name="experiment_more">Plus foncé</string>
     <string name="settings_save_button">Sauvegarder</string>
+    <string name="timer_nextIn_text">Prochaine série dans:</string>
     <!-- /settings -->
 </resources>

@@ -18,32 +18,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
     ArrayList<String[]> _inputs;
 
     private void save() {
-        boolean canSave = true;
+            Toast.makeText( this.getApplicationContext(), "Les valeurs ont bien été enregistrées.", Toast.LENGTH_SHORT ).show();
+            changeValuesInStorage();
+            this.finish();
+    }
 
+    private void changeValuesInStorage() {
         for (String[] _input : _inputs) {
             _input[0] = ((EditText) (findViewById( Integer.parseInt( _input[0] ) ))).getText().toString().trim();
             String input = _input[0];
 
             int value = ( input.length() != 0 ) ? Integer.parseInt( input ) : 0;
 
-            if (value <= 0) {
-                canSave = false;
-                break;
+            if (value > 0) {
+                LocalStorage.setValue( _input[1], _input[0] );
             }
-        }
-
-        if (canSave) {
-            Toast.makeText( this.getApplicationContext(), "Les valeurs ont bien été enregistrées.", Toast.LENGTH_SHORT ).show();
-            changeValuesInStorage();
-            this.finish();
-        } else {
-            Toast.makeText( this.getApplicationContext(), "Au moins une des valeurs entrées est incorrecte. Veuillez réessayer.", Toast.LENGTH_SHORT ).show();
-        }
-    }
-
-    private void changeValuesInStorage() {
-        for (String[] _input : _inputs) {
-            LocalStorage.setValue( _input[1], _input[0] );
         }
     }
 
@@ -53,6 +42,7 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
         initComponent( R.id.settings_tries_for_training_text, R.id.settings_training_tries_number,"settings_training_tries_text", "training_number_of_tries" );
         initComponent( R.id.settings_time_before_vanish_text, R.id.settings_time_before_vanish_part_value, "settings_time_before_vanish_text", "time_before_vanish" );
         initComponent( R.id.settings_alphas_text, R.id.settings_alphas_value, "settings_alphas_range_text", "range_for_alphas" );
+        initComponent( R.id.settings_number_of_experiments_text, R.id.settings_number_of_experiments_value, "settings_number_of_experiments_text", "number_of_experiments" );
 
         Button saveButton = findViewById( R.id.settings_save_button );
         saveButton.setOnClickListener( this );
@@ -66,6 +56,21 @@ public class SettingsActivity extends AppCompatActivity implements View.OnClickL
 
         _inputs.add( new String[]{ "" + _etID, _etKEY} );
 
+    }
+
+    @Override
+    public void onWindowFocusChanged( boolean hasFocus ) {
+        super.onWindowFocusChanged( hasFocus );
+        View decorView = getWindow().getDecorView();
+        if (hasFocus) {
+            decorView.setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                            | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                            | View.SYSTEM_UI_FLAG_FULLSCREEN
+                            | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
+        }
     }
 
     @Override

@@ -22,6 +22,8 @@ class ExperimentController {
 
 	private ArrayList<ArrayList<Answer>> answersList;
 	private ArrayList<ArrayList<Answer>> rightAnswers;
+	private ArrayList< Integer > leftSquares;
+	private ArrayList<ArrayList<Integer>> allAlphas;
 
 	private ArrayList< Answer > answers;
 	private ArrayList< Integer > alphas;
@@ -98,13 +100,15 @@ class ExperimentController {
 		this.experiment.removeAllViews();
 		this.answersList.add( this.answers );
 		this.rightAnswers.add(RectangleColorGenerator.getRightAnswers());
+		this.leftSquares.add( (this.number_of_black_bg > 0) ? 50 : 200 );
+		this.allAlphas.add( this.alphas );
 
 		if (inExperiment) {
 			if (this.current_experiment <= this.number_of_experiments) {
 				this.displayTimer();
 				this.number_of_black_bg--;
 			} else {
-				this.experiment.addView( new DisplayAnswers( this.context, this.answersList, this.rightAnswers ) );
+				this.experiment.addView( new DisplayAnswers( this.context, this.allAlphas, this.leftSquares, this.answersList, this.rightAnswers ) );
 				inExperiment = false;
 			}
 		} else {
@@ -117,24 +121,16 @@ class ExperimentController {
 		this.canClick = false;
 		experiment.removeAllViews();
 
-		new Handler( Looper.getMainLooper() ).postDelayed( new Runnable( ) {
-			@Override
-			public void run( ) {
-				addRectangles();
-				experiment.addButtons();
-				canClick = true;
-			}
+		new Handler( Looper.getMainLooper() ).postDelayed( ( ) -> {
+			addRectangles();
+			experiment.addButtons();
+			canClick = true;
 		}, 1 * 1_000 );
 	}
 
 	private void initTimers() {
 		this.handler = new Handler( Looper.getMainLooper() );
-		this.removeRectanglesRunnable = new Runnable( ) {
-			@Override
-			public void run( ) {
-				experiment.removeView( rectanglesView );
-			}
-		};
+		this.removeRectanglesRunnable = ( ) -> experiment.removeView( rectanglesView );
 	}
 
 //	constructor
@@ -151,6 +147,8 @@ class ExperimentController {
 		this.experiment = experiment;
 		this.answersList = new ArrayList<>(  );
 		this.rightAnswers = new ArrayList<>(  );
+		this.leftSquares = new ArrayList<>(  );
+		this.allAlphas = new ArrayList<>(  );
 
 		this.SCREEN_WIDTH = this.experiment.getResources( ).getDisplayMetrics( ).widthPixels;
 		this.SCREEN_HEIGHT = this.experiment.getResources().getDisplayMetrics().heightPixels;

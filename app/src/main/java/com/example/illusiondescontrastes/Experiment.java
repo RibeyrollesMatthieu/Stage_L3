@@ -1,9 +1,6 @@
 package com.example.illusiondescontrastes;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.RelativeLayout;

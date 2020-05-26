@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true ">
+    android:keepScreenOn="true">
 
 
     <TextView
@@ -11,7 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/home_prom_text_size"
-        android:gravity="center" />
+        android:gravity="center"
+        android:layout_centerInParent="true"/>
 
     <Button
         android:id="@+id/start_experiment_start_button"

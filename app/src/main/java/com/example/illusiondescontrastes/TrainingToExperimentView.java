@@ -4,11 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.io.IOException;
 
 @SuppressLint("ViewConstructor")
 class TrainingToExperimentView extends RelativeLayout implements View.OnClickListener {
